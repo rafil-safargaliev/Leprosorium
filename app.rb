@@ -9,12 +9,18 @@ def init_db
 	@db.results_as_hash = true
 end
 
+# before вызывается каждый раз при перезагрузке любой страницы
 before do 
+	# инициализация БД
     init_db
 end
 
+# configure вызывается каждый раз при конфигурации приложения,
+# когда изменился код программы и перезагрузилась страница 
 configure do 
+	# инициализация БД
 	init_db
+	# создаем таблицу если таблица не существует
 	@db.execute  'create table if not exists Posts 
 	(
 		id integer primary key autoincrement,
@@ -24,7 +30,7 @@ configure do
 end
 
 get '/' do
-	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School</a>"			
+	erb :index
 end
 
 # обработчик get-запроса /new
@@ -44,8 +50,8 @@ post '/new' do
 		return erb :new 
 	end 
 
-	@db.execute 'insert into Posts (content, created_date) values (?, datetime())', [content]
-
+	# сохранение данных в БД
+ 	@db.execute 'insert into Posts (content, created_date) values (?, datetime())', [content]
 
 	erb "You taiped: #{content}"
 end
