@@ -58,3 +58,7 @@ post '/new' do
 	# перенаправление на главную страницу
 	redirect to '/'
 end
+
+get '/details/1' do
+	
+  end
